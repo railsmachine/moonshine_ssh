@@ -22,21 +22,21 @@ describe SSH do
   
   it "should set default values" do
     @manifest.ssh
-    @manifest.puppet_resources[Puppet::Type::File].should include("/etc/ssh/sshd_config.new")
-    sshd_config = @manifest.puppet_resources[Puppet::Type::File]["/etc/ssh/sshd_config.new"][:content]
+    @manifest.files.should include("/etc/ssh/sshd_config.new")
+    sshd_config = @manifest.files["/etc/ssh/sshd_config.new"].content
     sshd_config.should match /Port 22/
     sshd_config.should match /PermitRootLogin no/
   end
   
   it "should check the configuration file before updating" do
     @manifest.ssh
-    @manifest.puppet_resources[Puppet::Type::Exec].should include("mv /etc/ssh/sshd_config.new /etc/ssh/sshd_config")
-    @manifest.puppet_resources[Puppet::Type::Exec]["mv /etc/ssh/sshd_config.new /etc/ssh/sshd_config"][:onlyif].should_not be_nil
+    @manifest.execs.should include("mv /etc/ssh/sshd_config.new /etc/ssh/sshd_config")
+    @manifest.execs["mv /etc/ssh/sshd_config.new /etc/ssh/sshd_config"].onlyif.should_not be_nil
   end
 
   it "should allow customization" do
     @manifest.ssh( :port => 9022 )
-    @manifest.puppet_resources[Puppet::Type::File]["/etc/ssh/sshd_config.new"][:content].should match /Port 9022/
+    @manifest.files["/etc/ssh/sshd_config.new"].content.should match /Port 9022/
   end
     
 end
