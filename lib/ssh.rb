@@ -16,8 +16,9 @@ module SSH
       :content => template(File.join(File.dirname(__FILE__), '..', 'templates', 'sshd_config'), binding),
       :require => package('ssh')
     
-    exec 'mv /etc/ssh/sshd_config.new /etc/ssh/sshd_config',
+    exec 'cp /etc/ssh/sshd_config.new /etc/ssh/sshd_config',
       :onlyif => '/usr/sbin/sshd -t -f /etc/ssh/sshd_config.new',
+      :unless => 'test `diff sshd_config sshd_config.new | wc -l` -eq 0',
       :require => file('/etc/ssh/sshd_config.new'),
       :notify => service('ssh')
   end

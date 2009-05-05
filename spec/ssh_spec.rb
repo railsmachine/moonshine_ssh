@@ -30,8 +30,8 @@ describe SSH do
   
   it "should check the configuration file before updating" do
     @manifest.ssh
-    @manifest.execs.should include("mv /etc/ssh/sshd_config.new /etc/ssh/sshd_config")
-    @manifest.execs["mv /etc/ssh/sshd_config.new /etc/ssh/sshd_config"].onlyif.should_not be_nil
+    @manifest.execs.should include("cp /etc/ssh/sshd_config.new /etc/ssh/sshd_config")
+    @manifest.execs["cp /etc/ssh/sshd_config.new /etc/ssh/sshd_config"].onlyif.should match /sshd -t/
   end
 
   it "should allow customization" do
