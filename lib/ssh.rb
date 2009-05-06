@@ -10,15 +10,17 @@ module SSH
   def ssh(options = {})
     package 'ssh', :ensure => :installed
     service 'ssh', :enable => true, :ensure => :running
-    
+
     file '/etc/ssh/sshd_config.new',
       :mode => '644',
       :content => template(File.join(File.dirname(__FILE__), '..', 'templates', 'sshd_config'), binding),
-      :require => package('ssh')
-    
+      :require => package('ssh'),
+      :notify => exec('update_sshd_config')
+
     exec 'cp /etc/ssh/sshd_config.new /etc/ssh/sshd_config',
+      :alias => 'update_sshd_config',
       :onlyif => '/usr/sbin/sshd -t -f /etc/ssh/sshd_config.new',
-      :unless => 'test `diff sshd_config sshd_config.new | wc -l` -eq 0',
+      :refreshonly => true,
       :require => file('/etc/ssh/sshd_config.new'),
       :notify => service('ssh')
   end
