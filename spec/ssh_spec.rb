@@ -38,5 +38,49 @@ describe SSH do
     @manifest.ssh( :port => 9022 )
     @manifest.files["/etc/ssh/sshd_config.new"].content.should match /Port 9022/
   end
+  
+  describe "configured for sftponly" do
+    
+    before do
+      @manifest.ssh(:sftponly => {
+        :users => {
+          :rob => {
+            :password => 'sekrit',
+            :groups => 'rails'
+          }
+        }
+      })
+    end
+    
+    it "should create the sftponly group" do
+      @manifest.groups.should include('sftponly')
+    end
+    
+    it "should add the user" do
+      @manifest.users.should include('rob')
+      @manifest.execs['rob password'].command.should == "echo rob:sekrit | chpasswd"
+    end
+    
+    it "should add user to sftponly and extra groups if requested" do
+      @manifest.users['rob'].groups.should == ['sftponly','rails']
+    end
+    
+    it "should create the home directory" do
+      @manifest.files.should include('/home/rob/home/rob')
+      @manifest.files['/home/rob/home/rob'].owner.should == 'rob'
+      @manifest.files['/home/rob/home'].owner.should == 'root'
+      @manifest.files['/home/rob'].owner.should == 'root'
+    end
+   
+    it "should set the sftp subsystem" do
+      @manifest.files['/etc/ssh/sshd_config.new'].content.should match /Subsystem sftp internal-sftp/
+    end
+   
+    it "should add a group matcher to the sshd config" do
+      @manifest.files['/etc/ssh/sshd_config.new'].content.should match /Match Group sftponly/
+      @manifest.files['/etc/ssh/sshd_config.new'].content.should match /ChrootDirectory \/home\/%u/
+    end
+    
+  end
     
 end
