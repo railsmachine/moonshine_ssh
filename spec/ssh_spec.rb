@@ -1,7 +1,6 @@
 require File.join(File.dirname(__FILE__), 'spec_helper.rb')
 
 class SSHManifest < Moonshine::Manifest
-  plugin :ssh
 end
 
 describe SSH do
