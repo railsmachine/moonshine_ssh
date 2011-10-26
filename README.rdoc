@@ -21,7 +21,41 @@ chance that you'll accidentally lock yourself out.
         - rails
 * Include the plugin and recipe you in your manifest:
     recipe :ssh
+
+=== Authorized Keys
+
+Puppet/ShadowPuppet has support for managing authorized keys like it does any other resource, but moonshine_ssh makes it simple to manage for your deploy user:
+
+dit moonshine.yml to include lines like:
+
+    :ssh:
+      :authorized_keys:
+        user1@host:
+          :type: ssh-rsa
+          :key: KEY BODY GOES HERE
+        user2@host:
+          :type: ssh-rsa
+          :key: KEY BODY GOES HERE
+
+By default, this applies only to the deploy user, but you can apply it to others:
+
+    :ssh:
+      :authorized_keys:
+        user1@host:
+          :type: ssh-rsa
+          :key: KEY BODY GOES HERE
+          :user: uploads
     
+If you ever need to remove a key, it's not as simple as removing the lines. You have to tell moonshine it needs to be removed:
+
+
+    :ssh:
+      :authorized_keys:
+        user1@host:
+          :type: ssh-rsa
+          :key: KEY BODY GOES HERE
+          :ensure: absent
+
 === SFTP-only users
 
 OpenSSH supports chrooting users natively. You can create users who will be chrooted

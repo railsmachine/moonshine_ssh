@@ -29,8 +29,17 @@ module SSH
       :refreshonly => true,
       :require => file('/etc/ssh/sshd_config.new'),
       :notify => service('ssh')
-    
+
+    authorized_keys = options[:authorized_keys] || {}
+    authorized_keys.each do |name, options|
+      ensured = (options.delete(:ensure) || :present).to_sym
+      options = {:ensure => ensured, :user => configuration[:user]}.merge(options)
+
+      ssh_authorized_key name, options
+    end
   end
+
+
   
   private 
   
