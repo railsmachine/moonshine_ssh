@@ -108,3 +108,8 @@ Match Group sftponly
   X11Forwarding no
   AllowTcpForwarding no
 <% end %>
+
+# DebianBanner - Comes up in PCI reports all the time, so we should disable it by default:
+DebianBanner no
+
+
