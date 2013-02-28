@@ -10,7 +10,10 @@ module SSH
   def ssh(options = {})
 
     package 'ssh', :ensure => :installed
-    service 'ssh', :enable => true, :ensure => :running
+    service 'ssh', 
+      :enable => true, 
+      :ensure => :running,
+      :provider => :upstart
 
     if options[:sftponly]
       options[:subsystem] = {:sftp => 'internal-sftp'}
