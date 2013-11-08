@@ -13,7 +13,7 @@ module SSH
     service 'ssh', 
       :enable => true, 
       :ensure => :running,
-      :provider => :upstart
+      :provider => :init
 
     if options[:sftponly]
       options[:subsystem] = {:sftp => 'internal-sftp'}
@@ -26,14 +26,15 @@ module SSH
       :require => package('ssh'),
       :notify => exec('update_sshd_config')
 
-    exec 'cp /etc/ssh/sshd_config.new /etc/ssh/sshd_config',
-      :alias => 'update_sshd_config',
+    exec 'update_sshd_config',
+      :command => 'cp /etc/ssh/sshd_config.new /etc/ssh/sshd_config',
       :onlyif => '/usr/sbin/sshd -t -f /etc/ssh/sshd_config.new',
       :refreshonly => true,
       :require => file('/etc/ssh/sshd_config.new'),
       :notify => service('ssh')
 
     authorized_keys = options[:authorized_keys] || {}
+    authorize
     authorized_keys.each do |name, options|
       ensured = (options.delete(:ensure) || :present).to_sym
       options = {:ensure => ensured, :user => configuration[:user]}.merge(options)
