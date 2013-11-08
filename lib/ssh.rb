@@ -34,7 +34,6 @@ module SSH
       :notify => service('ssh')
 
     authorized_keys = options[:authorized_keys] || {}
-    authorize
     authorized_keys.each do |name, options|
       ensured = (options.delete(:ensure) || :present).to_sym
       options = {:ensure => ensured, :user => configuration[:user]}.merge(options)
