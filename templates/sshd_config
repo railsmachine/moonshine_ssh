@@ -112,4 +112,8 @@ Match Group sftponly
 # DebianBanner - Comes up in PCI reports all the time, so we should disable it by default:
 DebianBanner no
 
-
+<% if options[:client_alive] %>
+# Timeouts 
+ClientAliveInterval <%= options[:client_alive][:interval] %>
+ClientAliveCountMax <%= options[:client_alive][:count_max] %>
+<% end %>
