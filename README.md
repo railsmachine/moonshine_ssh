@@ -1,6 +1,6 @@
-= Moonshine_SSH
+# Moonshine_SSH
 
-== A plugin for Moonshine[http://github.com/railsmachine/moonshine]
+## A plugin for [Moonshine](http://github.com/railsmachine/moonshine)
 
 This plugin provides a few security improvements for your default SSH
 configuration. It also gives you the ability to easily customize your
@@ -10,7 +10,7 @@ to see the available settings.
 The new configuration file is tested before it's used, so there's less
 chance that you'll accidentally lock yourself out.
 
-=== Instructions
+### Instructions
 
 * <tt>script/plugin install git://github.com/railsmachine/moonshine_ssh.git</tt>
 * Edit moonshine.yml to customize plugin settings if desired:
@@ -22,7 +22,7 @@ chance that you'll accidentally lock yourself out.
 * Include the plugin and recipe you in your manifest:
     recipe :ssh
 
-=== Authorized Keys
+### Authorized Keys
 
 Puppet/ShadowPuppet has support for managing authorized keys like it does any other resource, but moonshine_ssh makes it simple to manage for your deploy user:
 
@@ -56,7 +56,7 @@ If you ever need to remove a key, it's not as simple as removing the lines. You 
           :key: KEY BODY GOES HERE
           :ensure: absent
 
-=== SFTP-only users
+### SFTP-only users
 
 OpenSSH supports chrooting users natively. You can create users who will be chrooted
 and only allowed to use SFTP (no console access) by adding the following to your 
@@ -79,7 +79,7 @@ Once connected via sftp, the user will be chrooted to /home/sftponly where they 
 'home' directory. The user can upload files to /home/sftponly. For a normal user, the uploaded 
 files will be located at /home/sftponly/home/sftponly.
 
-==== Advanced
+#### Advanced
 
 For a more complicated example, we'll consider a user called 'rob' who needs to upload 
 files into a directory under the Rails application's shared/ directory. Since he will 
@@ -117,3 +117,7 @@ In your manifest:
     recipe :mount_assets
 
 Then deploy, and you're done! The user's /home/rob/assets directory is now actually the shared assets directory. Anything uploaded there will be available to the application automatically.
+
+***
+Unless otherwise specified, all content copyright &copy; 2014, [Rails Machine, LLC](http://railsmachine.com)
+
