@@ -8,12 +8,15 @@ module SSH
   #   configure(:ssh => {:permit_root_login => 'yes', :port => 9022})
   #
   def ssh(options = {})
-
+    ssh_provider = :init
+    if ubuntu_trusty?
+      ssh_provider = :upstart
+    end
     package 'ssh', :ensure => :installed
     service 'ssh', 
       :enable => true, 
       :ensure => :running,
-      :provider => :init
+      :provider => ssh_provider
 
     if options[:sftponly]
       options[:subsystem] = {:sftp => 'internal-sftp'}
